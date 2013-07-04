@@ -61,7 +61,7 @@ Radiant::Initializer.run do |config|
   config.action_controller.session_store = :cookie_store
 
   # Activate observers that should always be running
-  config.active_record.observers = :user_action_observer
+  config.active_record.observers = :user_action_observer, :page_observer
   
   # The internationalization framework can be changed to have another default locale (standard is :en) or more load paths.
   # All files from config/locales/*.rb,yml are added automatically.
