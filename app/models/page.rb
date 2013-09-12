@@ -8,6 +8,7 @@ class Page < ActiveRecord::Base
 
   # Callbacks
   before_save :update_virtual, :update_status, :set_allowed_children_cache
+  after_save :expire_admin_cache
 
   # Associations
   acts_as_tree :order => 'virtual DESC, title ASC'
@@ -223,7 +224,13 @@ class Page < ActiveRecord::Base
     [default_child, *Page.descendants.sort_by(&:name)].uniq
   end
 
+  def expire_admin_cache
+    ActionController::Base.new.expire_fragment(%r{/admin/pages.action_suffix=page_#{self.parent_id}})
+    ActionController::Base.new.expire_fragment(%r{/admin/pages.action_suffix=page_#{self.id}})
+  end
+
   def set_allowed_children_cache
+    logger.debug 'set_allowed_children_cache'
     self.allowed_children_cache = allowed_children_lookup.collect(&:name).join(',')
   end
 

@@ -21,12 +21,6 @@
             %td.actions
               = page.add_child_option
               = page.remove_option
-
-    - if expanded
-      /- page.children.each do |child|
-      - Page.find_all_by_parent_id(page.id, :include => :children, :order => "title asc").each do |child|
-        - child.becomes(child.class_name.constantize) if child.class_name.present?
-        = render_node child, :level => level + 1, :simple => simple
 - else
   %tr.page{:class =>"level_#{level}#{children_class}#{virtual_class}", :id => "page_#{page.id}"}
     - render_region :node, :locals => {:page => page, :level => level, :simple => simple} do |node|
@@ -50,8 +44,7 @@
             = page.add_child_option
             = page.remove_option
 
-  - if expanded
-    /- page.children.each do |child|
     - Page.find_all_by_parent_id(page.id, :include => :children, :order => "title asc").each do |child|
       - child.becomes(child.class_name.constantize) if child.class_name.present?
       = render_node child, :level => level + 1, :simple => simple
+
